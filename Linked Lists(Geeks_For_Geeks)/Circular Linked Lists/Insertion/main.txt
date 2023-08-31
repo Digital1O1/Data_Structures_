@@ -1,0 +1,135 @@
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+    int data;
+    struct Node *next;
+};
+
+struct Node *addToEmpty(struct Node *tail, int data)
+{
+    // This function is only for empty list
+    if (tail != NULL)
+        return tail;
+
+    // Creating a node dynamically.
+    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+
+    // Assigning the data.
+    new_node->data = data;
+    tail = new_node;
+
+    // Creating the link that loops around to the first node
+    tail->next = tail;
+    return tail;
+}
+
+struct Node *addBegin(struct Node *tail, int data)
+{
+    if (tail == NULL)
+        return addToEmpty(tail, data);
+
+    // Allocate space for the new node
+    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+    // Insert the incoming data
+    new_node->data = data;
+    // Create link with incoming node to the previous/tail node
+    new_node->next = tail->next;
+    // Have the tail node point to the new inserted node
+    tail->next = new_node;
+    return tail;
+}
+
+struct Node *addEnd(struct Node *tail, int data)
+{
+    // Reference : https://www.youtube.com/watch?v=kErHUGvFrNg&ab_channel=NesoAcademy
+    if (tail == NULL)
+        return addToEmpty(tail, data);
+
+    struct Node *newP = (struct Node *)malloc(sizeof(struct Node));
+
+    // Insert new data
+    newP->data = data;
+
+    // The swiggly lines are where the pointers are pointing
+    // Have the inserted/new_node node point towards the first node in the list
+    // It's worth noting that the pointer(s) to newP and tail 'switch'
+    newP->next = tail->next;
+
+    // Have the previous node before the inserted node point towards the inserted node
+    // Have the tail node point to the new inserted node
+
+    // Have the former 'last' node point to the newP node that's now the last node of the list
+    tail->next = newP;
+
+    // Have the tail pointer (that was formerly 2nd to last) point towards the newP node
+    tail = newP;
+
+    return tail;
+}
+
+struct Node *addAfter(struct Node *tail, int data, int item)
+{
+    if (tail == NULL)
+        return NULL;
+
+    struct Node *new_node, *p;
+    p = tail->next;
+
+    do
+    {
+        if (p->data == item)
+        {
+            new_node = (struct Node *)malloc(sizeof(struct Node));
+            new_node->data = data;
+            new_node->next = p->next;
+            p->next = new_node;
+            if (p == tail)
+                tail = new_node;
+            return tail;
+        }
+        p = p->next;
+    } while (p != tail->next);
+
+    cout << item << " not present in the list." << endl;
+    return tail;
+}
+
+void traverse(struct Node *tail)
+{
+    struct Node *p;
+
+    // If list is empty, return.
+    if (tail == NULL)
+    {
+        cout << "List is empty." << endl;
+        return;
+    }
+
+    // Pointing to first Node of the list.
+    p = tail->next;
+
+    // Traversing the list.
+    do
+    {
+        cout << p->data << " ";
+        p = p->next;
+    } while (p != tail->next);
+}
+
+// Driver code
+int main()
+{
+    struct Node *tail = NULL;
+    tail = addToEmpty(tail, 6);
+    tail = addBegin(tail, 4);
+    tail = addBegin(tail, 2);
+    tail = addEnd(tail, 8);
+    // tail = addEnd(tail, 12);
+    // tail = addAfter(tail, 10, 8);
+
+    // Function call
+    traverse(tail);
+    return 0;
+}
