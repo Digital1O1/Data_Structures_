@@ -275,55 +275,93 @@ struct Node *addAfter(struct Node *last, int data, int item)
 
 -   The user will give the program a node to be deleted from the current list
 
+## Deleting a node from a circular singly linked list
+- First position
+- Last position
+- Any given position
+
+## Deleting first node from Singly Circular Linked Lists
+
+![image](https://github.com/Digital1O1/Data_Structures_/assets/39348633/4b6a23cf-cf90-480a-85c8-57854b58dda1)
+
+
+
 ```cpp
-void deleteNode(Node** head, int key)
+// Function to delete First node of
+// Circular Linked List
+void DeleteFirst(struct Node** head)
 {
-    // If linked list is empty
-    if (*head == NULL)
-        return;
+	struct Node *previous = *head, *firstNode = *head;
 
-    // 1) Delete the node only if it is the only node in the circular linked list:
-    // Checks if the 'key' is found AND if the head points towards itself
-    if ((*head)->data == key && (*head)->next == *head)
-    {
-        free(*head);
-        *head = NULL;
-        return;
-    }
+	// check if list doesn't have any node
+	// if not then return
+	if (*head == NULL) {
+		printf("\nList is empty\n");
+		return;
+	}
 
-    Node *last = *head, *delete_node;
+	// check if list have single node
+	// if yes then delete it and return
+	if (previous->next == previous) {
+		*head = NULL;
+		return;
+	}
 
-    // If head is to be deleted
-    if ((*head)->data == key)
-    {
-        // Find the last node of the list
-        while (last->next != *head)
-            last = last->next;
+	// traverse second node to first
+	while (previous->next != *head) {
 
-        // Point last node to the next of
-        // head i.e. the second node
-        // of the list
-        last->next = (*head)->next;
-        free(*head);
-        *head = last->next;
-        return;
-    }
+		previous = previous->next;
+	}
 
-    // If neither the node to be deleted is found or not at the end of the list keep iterating through
-    while (last->next != *head && last->next->data != key)
-    {
-        last = last->next;
-    }
+	// now previous is last node and
+	// first node(firstNode) link address
+	// put in last node(previous) link
+	previous->next = firstNode->next;
 
-    // If node to be deleted was found
-    if (last->next->data == key)
-    {
-        delete_node = last->next;
-        last->next = delete_node->next;
-        free(delete_node);
-    }
-    else
-        cout << "Given node is not found in the list!!!\n";
+	// make second node as head node
+	*head = previous->next;
+	free(firstNode);
+	return;
 }
 
+
+// Function delete last node of
+// Circular Linked List
+void DeleteLast(struct Node** head)
+{
+	struct Node *current = *head, *temp = *head, *previous;
+
+	// check if list doesn't have any node
+	// if not then return
+	if (*head == NULL) {
+		printf("\nList is empty\n");
+		return;
+	}
+
+	// check if list have single node
+	// if yes then delete it and return
+	if (current->next == current) {
+		*head = NULL;
+		return;
+	}
+
+	// move first node to last
+	// previous
+	while (current->next != *head) {
+		previous = current;
+		current = current->next;
+	}
+
+	previous->next = current->next;
+	*head = previous->next;
+	free(current);
+	return;
+}
+
+
+
+
+
 ```
+
+

@@ -8,37 +8,39 @@ public:
     Node *next;
 };
 
-void add_To_Empty(Node **head_reference, int incoming_value)
+void add_To_Empty(Node **tail_reference, int incoming_value)
 {
     Node *new_node = new Node();
     new_node->data = incoming_value;
-    // Creates circular link where the node points back to itself
+
+    // Create a circular link where the node points back to itself
     new_node->next = new_node;
 
-    // Updates 'head_reference' to point to the newly created node
-    // Making it the new 'head' node of the LL
-    *head_reference = new_node;
+    // Update 'tail_reference' to point to the newly created node
+    // Making it the new 'tail' node of the circular linked list
+    *tail_reference = new_node;
 }
 
-void add_To_List(Node **head_reference, int incoming_value)
+void add_To_List(Node **tail_reference, int incoming_value)
 {
     // Create space for new node
     Node *new_node = new Node();
 
     // Point new_node towards incoming pointer and value
     new_node->data = incoming_value;
-    new_node->next = *head_reference;
+    new_node->next = *tail_reference;
 
     // Also have last_node point towards incoming pointer
-    Node *traversing_node = *head_reference;
+    Node *traversing_node = *tail_reference;
 
     // Traverse through LL with last_node
     // Since we're not going to NULL as with singly LL, we're heading towards the first node in the LL
-    while (traversing_node->next != *head_reference)
+    while (traversing_node->next != *tail_reference)
         traversing_node = traversing_node->next;
 
     // After traversing_node points towards head
-    // update traversing_node pointer to point towards new_node to complete circular linking of new node to the LL
+    // update traversing_node pointer to point towards new_node to
+    // complete circular linking of new node to the LL
     traversing_node->next = new_node;
 }
 
@@ -59,27 +61,54 @@ void add_End(Node **last_node, int incoming_value)
     *last_node = temp;
 }
 
-void print_Nodes(Node *head_reference)
+void print_Nodes(Node *tail_reference)
 {
-    if (head_reference == nullptr)
+    if (tail_reference == nullptr)
     {
         cout << "List is empty." << endl;
         return;
     }
 
-    Node *temp = head_reference;
+    Node *temp = tail_reference;
 
     // Since we're dealing with CIRCULAR linked lists and not Singly LL
-    // The head_reference is the NULL since there's technically no 'end' with a circular LL
+    // The tail_reference is the NULL since there's technically no 'end' with a circular LL
     do
     {
         printf("%d ", temp->data);
         // cout << temp->data << " ";
         temp = temp->next;
-    } while (temp != head_reference);
+    } while (temp != tail_reference);
 
     cout << endl;
 }
+
+void deleteFirstNode(Node **tail)
+{
+    if (*tail == nullptr)
+    {
+        printf("LIST EMPTY\r\n");
+        return; // No need to proceed further if the list is empty
+    }
+
+    Node *firstNode = (*tail)->next; // Get the first node (next of tail)
+
+    if (firstNode == *tail)
+    {
+        // If there's only one node in the list, delete it and set tail to nullptr
+        delete firstNode;
+        *tail = nullptr;
+    }
+    else
+    {
+        // Update the tail's next pointer to skip the first node
+        (*tail)->next = firstNode->next;
+
+        // Delete the first node
+        delete firstNode;
+    }
+}
+
 using namespace std;
 
 int main()
@@ -92,7 +121,6 @@ int main()
     add_To_List(&node, 23);
     add_To_List(&node, 44);
     add_End(&node, 23388);
-
     print_Nodes(node);
 
     return 0;

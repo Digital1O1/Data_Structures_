@@ -51,13 +51,18 @@ struct LinkedList
         while (current != NULL)
         {
             // Store next
+            // Store the 'current' next pointer in next
             next = current->next;
 
             // Reverse current node's pointer
             // Does the actual pointer reversal
+            // Move the pointer that's associated with CURRENT to where PREV is at
             current->next = prev;
+
             // Move pointers one position ahead.
+            // Move PREV to CURRENT
             prev = current;
+            // Move CURRENT to NEXT
             current = next;
         }
         head = prev;
