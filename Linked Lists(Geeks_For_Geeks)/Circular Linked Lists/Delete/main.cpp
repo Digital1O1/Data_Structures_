@@ -11,9 +11,39 @@ public:
     Node *next;
 };
 
-// Function to insert a node at the end of
-// a Circular linked list
-void Insert(Node **head, int data)
+void insertAtBeginning(Node **head, int newData)
+{
+    Node *newNode = new Node;
+    newNode->data = newData;
+
+    if (*head == nullptr)
+    {
+        // If the list is empty, make the new node point to itself
+        newNode->next = newNode;
+        *head = newNode;
+    }
+    else
+    {
+        // Find the last node in the list
+        Node *last = *head;
+        while (last->next != *head)
+        {
+            last = last->next;
+        }
+
+        // Make the new node point to the head of the list
+        newNode->next = *head;
+
+        // Update the last node to point to the new node
+        last->next = newNode;
+
+        // Update the head to the new node
+        *head = newNode;
+    }
+}
+
+// Function to insert a node at the end of a Circular linked list
+void insert_at_end(Node **head, int data)
 {
     // Create a pointer 'current' and initialize it with the head node
     Node *current = *head;
@@ -28,7 +58,7 @@ void Insert(Node **head, int data)
         return;
     }
 
-    // Insert the data into the newly created node
+    // insert_at_end the data into the newly created node
     newNode->data = data;
 
     // Check if the list is empty
@@ -44,6 +74,7 @@ void Insert(Node **head, int data)
     }
     else
     {
+        // current is pointing towards 'head' at the moment
         // If the list is NOT empty, we need to find the last node
         // We start from the head node and traverse until we reach the last node
         while (current->next != *head)
@@ -113,6 +144,15 @@ int Length(Node *head)
 // Function delete First node of Circular Linked List
 void DeleteFirst(Node **head)
 {
+    /*
+        Approach
+            1) Take two pointers NODE_DELETE and PREVIOUS and traverse the list.
+            2) Keep the pointer NODE_DELETE fixed pointing to the first node and move PREVIOUS until it reaches the last node.
+            3)Once, the pointer PREVIOUS reaches the last node, do the following:
+                PREVIOUS->next = NODE_DELETE-> next
+                head = PREVIOUS -> next;
+    */
+
     Node *previous = *head;
     Node *node_delete = *head;
 
@@ -124,6 +164,7 @@ void DeleteFirst(Node **head)
     }
 
     // Check if the list contains a single node
+    // Effectivley checks if previous is pointing towards itself
     if (previous->next == previous)
     {
         *head = NULL; // The list becomes empty
@@ -131,22 +172,19 @@ void DeleteFirst(Node **head)
         return;
     }
 
-    // Traverse to find the last node
+    // Take 'previous' node and traverse to the end of the list
     while (previous->next != *head)
     {
-        // Update the previous node
-        // previous = next;
-
         // Do the actual traversing
         previous = previous->next;
     }
 
-    // Now 'previous' is the LAST node, and 'node_delete' is the FIRST node
-
-    // Update the last node's next pointer to skip the first node
+    // Now 'previous' is the LAST node, and 'node_delete' is pointing towards the FIRST node that's to be DELETED
+    // Reminder : 'previous' node has traversed towards the END of the LL
+    // This line has 'node_delete' point towards the second node in the circular LL
     previous->next = node_delete->next;
 
-    // Make the second node (next) the new head of the list
+    // Updates head pointer to point to the next node after the first in the LL is removed
     *head = previous->next;
 
     // Free the memory of the old first node
@@ -159,6 +197,15 @@ void DeleteFirst(Node **head)
 // Circular Linked List
 void DeleteLast(Node **head)
 {
+
+    /*
+        Approach
+            1) Take two pointers current and previous and traverse the list.
+            2) Move both pointers such that next of previous is always pointing to current. Keep moving the pointers current and previous until current reaches the last node and previous is at the second last node.
+            3) Once, the pointer current reaches the last node, do the following:
+                previous->next = current-> next
+                head = previous -> next;
+    */
     Node *current = *head, *previous = NULL;
 
     // Check if the list is empty
@@ -179,14 +226,16 @@ void DeleteLast(Node **head)
     // Traverse the list to find the second-to-last node
     while (current->next != *head)
     {
-        // Store the current node as the previous node
+        // Store the current node as the previous
+        // Previous will always be one step behind 'current'
         previous = current;
 
         // Move current to the next node
         current = current->next;
     }
-
+    // 'previous' node points to the second-to-last node
     // Update the previous node's next pointer to skip the last node
+    // *head is updated to the second node in the LL
     previous->next = *head;
 
     // Free the last node to deallocate memory
@@ -255,13 +304,13 @@ void DeleteNodeAtPosition(Node **head, int position)
 int main()
 {
     struct Node *head = NULL;
-    Insert(&head, 99);
-    Insert(&head, 11);
-    Insert(&head, 22);
-    Insert(&head, 33);
-    Insert(&head, 44);
-    Insert(&head, 55);
-    Insert(&head, 66);
+    insert_at_end(&head, 99);
+    insert_at_end(&head, 11);
+    insert_at_end(&head, 22);
+    insert_at_end(&head, 33);
+    insert_at_end(&head, 44);
+    insert_at_end(&head, 55);
+    insert_at_end(&head, 66);
 
     // // Deleting Node at position
     // printf("Initial List: ");
