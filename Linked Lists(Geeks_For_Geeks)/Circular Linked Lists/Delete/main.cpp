@@ -181,7 +181,7 @@ void DeleteFirst(Node **head)
 
     // Now 'previous' is the LAST node, and 'node_delete' is pointing towards the FIRST node that's to be DELETED
     // Reminder : 'previous' node has traversed towards the END of the LL
-    // This line has 'node_delete' point towards the second node in the circular LL
+    // 'node_delete' point towards the second node in the circular LL
     previous->next = node_delete->next;
 
     // Updates head pointer to point to the next node after the first in the LL is removed
@@ -233,9 +233,9 @@ void DeleteLast(Node **head)
         // Move current to the next node
         current = current->next;
     }
-    // 'previous' node points to the second-to-last node
-    // Update the previous node's next pointer to skip the last node
-    // *head is updated to the second node in the LL
+    // REMEMBER : 'previous' node currently points to the second-to-last node
+    // The next pointer of the second-to-last node (previous) is updated to skip the last node, effectively removing it from the circular linked list.
+    // The head is then updated to point to the new last node.
     previous->next = *head;
 
     // Free the last node to deallocate memory
